@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Post new item</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+	<div>
+		<h3>Post new auction item</h3>
+	</div>
+	<br>
+	<div id="greet-area2">Hello :-)</div>
+	<div>
+		<a href="/index.html">Back to home page</a> 
+	</div>
+	<br>
+	<form name="item-form">
+		Item name: <input type="text" id="item-name" > <br> <br>
+		Starting price: $ <input type="text" id="start-price"> <br> <br>
+		Ending date: <input type="text" id="end-date" value="mm/dd/yyyy"> <br> <br>
+		Contact Number: <input type="text" id="contact-number" value="xxx-xxx-xxxx"> <br> <br>
+	</form>
+
+	<br>
+	<div>
+		<button id="post-button">Post item</button>
+	</div>
+	<div id="posting-state"></div>
+
+	<!--Load AWS SDK for node.js -->
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.46.min.js"></script>
+	<!-- Load our application -->
+    <script type="text/javascript" src="js/appInfo.js"></script>
+	<script type="text/javascript" src="js/post.js"></script>
+</body>
+</html>

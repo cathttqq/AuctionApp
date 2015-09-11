@@ -1,0 +1,46 @@
+<html>
+<head>
+	<title>Azure Tools Team Market Place</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+</head>
+<body>
+	<h3>Welcome to the Azure Tools Market Place</h3>
+	<div id="fb-root"></div>
+	<nav>
+		<a id="login-button" href="#">Login</a>
+	</nav>
+	<div id="greet-area">Hello :-)</div>
+	<div>
+		<br>
+		<a href="/postItem.html">Post new items</a>
+	</div>
+
+	<div>
+		<br>
+	</div>
+
+	<div>
+		<table data-bind="foreach: auctionItems, visible: auctionItems().length > 0">
+			<!-- Item Name + Base Price + Seller Name-->
+			<tr><td data-bind="text: sellInfo"></td></tr>
+			<!-- Contact information to the seller-->
+			<tr><td data-bind="text: contactInfo"></td></tr>
+			<!-- Buyer Name + price-->
+			<tr><td data-bind="text: buyerInfo"></td></tr>
+			<!-- input: new price-->
+			<tr><td><input data-bind="value: latestPrice" placeholder="Enter your price here"/></td></tr>
+			<!-- submit: submit bid-->
+			<tr><td><button type="submit" data-bind="click: $parent.enterNewBid">OK</button></td></tr>
+			<tr><td></td></tr>
+		</table>
+	</div>
+	
+
+	<!--Load AWS SDK for node.js -->
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.46.min.js"></script>
+	<!-- Load our application -->
+    <script type="text/javascript" src="js/appInfo.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>

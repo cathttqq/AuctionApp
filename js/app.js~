@@ -1,0 +1,36 @@
+
+(function(){
+  
+	var adminCredentials = new AWS.WebIdentityCredentials({
+		RoleArn: appInfo.admin.roleArn,
+		ProviderID: appInfo.admin.providerId	
+	}); 
+  
+
+})();
+
+
+
+/*
+AWS.config.credentials = new AWS.WebIdentityCredentials({
+  RoleArn: 'arn:aws:iam::229417637005:role/AppIAM',
+  ProviderId: 'graph.facebook.com',
+  WebIdentityToken: ACCESS_TOKEN
+});
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '920745247982649',
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+**/
