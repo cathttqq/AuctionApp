@@ -2,6 +2,8 @@
 <head>
 	<title>Azure Tools Team Market Place</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.1.0/jquery.countdown.js"></script>
 	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
 </head>
 <body>
@@ -16,18 +18,20 @@
 		<a href="/postItem.html">Post new items</a>
 	</div>
 
-	<div>
-		<br>
-	</div>
+	<!-- <div class="countdown">
+		<span id="clock"></span>
+	</div> -->
 
 	<div>
 		<table data-bind="foreach: auctionItems, visible: auctionItems().length > 0">
 			<!-- Item Name + Base Price + Seller Name-->
 			<tr><td data-bind="text: sellInfo"></td></tr>
-			<!-- Contact information to the seller-->
-			<tr><td data-bind="text: contactInfo"></td></tr>
 			<!-- Buyer Name + price-->
 			<tr><td data-bind="text: buyerInfo"></td></tr>
+			<!-- countdown on how much time left -->
+			<tr><td><div class="countdown">
+				<span id='clock' data-bind="template: { afterRender: renderAfterKO }, attr: {'id': itemKey()}">Hello World</span>	
+				</div></td></tr>
 			<!-- input: new price-->
 			<tr><td><input data-bind="value: latestPrice" placeholder="Enter your price here"/></td></tr>
 			<!-- submit: submit bid-->

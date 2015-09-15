@@ -8,9 +8,9 @@
   var adminLoggedIn = false;
 
   var adminCredentials = new AWS.WebIdentityCredentials({
-		RoleArn: appInfo.admin.roleArn,
-		ProviderID: appInfo.admin.providerId	
-	}); 
+    RoleArn: appInfo.admin.roleArn,
+    ProviderID: appInfo.admin.providerId  
+  }); 
 
   var dbReader = new AWS.DynamoDB({params: {TableName: appInfo.db.auctionItemTableName},
                           credentials: appInfo.db.readCredentials});
@@ -23,7 +23,7 @@
   var postArea = document.getElementById('post-area');
   
   //shared variable
-  var userName = "";
+  var userName = "Pikachu";
 
   function loadAuctionItems(callback){
 
@@ -64,36 +64,61 @@
   function getUserInfo(){
     FB.api('/me', function(response) {
  
+        console.log("cawa debug 2: " + response.name)
         userName = response.name;
         sessionStorage.setItem('user', response.name);
         greetArea.innerHTML = ('<h3>' + "Hello " + userName + " :-D" +'</h3>');
         });
   }
 
-  function bidEntry(pSellInfo, pContactInfo, pBuyerInfo, pCurrentPrice, pItemKey, pEndDate){
-    this.sellInfo = ko.observable(pSellInfo);
-    this.buyerInfo = ko.observable(pBuyerInfo);
-    this.contactInfo = ko.observable(pContactInfo);
-    this.currentPrice = ko.observable(pCurrentPrice);
-    this.itemKey = ko.observable(pItemKey);
-    this.endDate = ko.observable(pEndDate);
-    this.latestPrice = ko.observable();
-  }
-
-  function AuctionViewModel(){
+  function bidEntry(pSellInfo,pBuyerInfo, pCurrentPrice, pItemKey, pEndDate){
     var self = this;
+    self.sellInfo = ko.observable(pSellInfo);
+    self.buyerInfo = ko.observable(pBuyerInfo);
+    self.currentPrice = ko.observable(pCurrentPrice);
+    self.itemKey = ko.observable(pItemKey);
+    self.endDate = ko.observable(pEndDate);
+    self.latestPrice = ko.observable();
+    self.renderAfterKO = function(template) {
+      $(document).ready(function() {
+      console.log("render after");
+      console.log($('.'+self.itemKey()));
+      $('#clock').countdown(self.endDate() + ' 12:00:00').on('update.countdown', function(event) {
+          console.log("Generating Countdown...");
+          var format = '%H:%M:%S';
+          if(event.offset.days > 0) {
+            format = '%-d day%!d ' + format;
+          }
+          if(event.offset.weeks > 0) {
+            format = '%-w week%!w ' + format;
+          }
+          $(this).html(event.strftime(format));
+      }).on('finish.countdown', function(event) {
+          $(this).html('This offer has expired!');
+          $(this).parent().addClass('disabled')
+        });
+    });
+    }
+}
+  function AuctionViewModel(){
+
+    var self = this;
+
 
     self.auctionItems = ko.observableArray([]);
 
     self.enterNewBid = function(entry){
-
+      //test passing variable
+      console.log(entry.currentPrice());
+      console.log(entry.latestPrice());
+      console.log(entry.itemKey());
+      console.log(entry.endDate());
 
       //check if the new price if greater than the base price and current price
       if (parseInt(entry.latestPrice()) > parseInt(entry.currentPrice()))
       //if yes
         {
           if (adminLoggedIn){
-          //TODO: update database with current latest price and buyer name
           
           var params = {
             TableName: appInfo.db.auctionItemTableName,
@@ -145,8 +170,7 @@
 
     loadAuctionItems(function(data){
       for (var i=0; i<data.length; i++){
-        var sellInfo = data[i].SellerName.S+ " is selling " + data[i].ItemName.S+ " for $" +data[i].StartPrice.S 
-        var contactInfo = "Contact " + data[i].ContactNumber.S +" for more details";
+        var sellInfo = data[i].SellerName.S+ " is selling " + data[i].ItemName.S+ " for $" +data[i].StartPrice.S;
         var buyerInfo;
         var currentPrice;
         if (data[i].BuyerName && data[i].CurrentPrice){
@@ -160,14 +184,19 @@
         
         var itemKey = data[i].ItemID.N.toString();
 
+        //test
+        console.log("item ID: "+ itemKey);
         
-        var endDate = data[i].EndDate.S;
+        var endDateOri = data[i].EndDate.S;
+        var endDate = endDateOri.substring(0,4) + '/' + endDateOri.substring(5,7) + '/' + endDateOri.substring(8,10);
 
-        self.auctionItems.push(new bidEntry(sellInfo,contactInfo,buyerInfo,currentPrice,itemKey,endDate));
+        self.auctionItems.push(new bidEntry(sellInfo,buyerInfo,currentPrice,itemKey,endDate));
       }
-    
+      console.log(self.auctionItems());
     });
     
+
+
   }
 
   ko.applyBindings(new AuctionViewModel());
@@ -230,10 +259,10 @@
         getUserInfo();
 
         adminLoggedIn = true;
-
+        console.log('You are now logged in.');
         loginButton.text = "logout"
       } else {
- 
+        console.log('There was a problem logging you in.');
       }
     });
   }
@@ -250,10 +279,5 @@
     js.src = "//connect.facebook.net/en_US/all.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
-
-  //loginButton.addEventListener('click', adminLogin, false);
-  //loadAuctionItems();
-
-
 })();
 
